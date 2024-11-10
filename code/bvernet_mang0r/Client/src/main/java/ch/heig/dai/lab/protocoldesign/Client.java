@@ -9,8 +9,10 @@ import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 
 public class Client {
-    final String SERVER_ADDRESS = "172.17.59.163";
+    final String SERVER_ADDRESS = "172.21.200.183";
     final int SERVER_PORT = 55555;
+    final String END_LINE = "\n";
+    final String SEPARATOR = " ";
 
     public static void main(String[] args) {
         // Create a new client and run it
@@ -21,60 +23,53 @@ public class Client {
     private void run() {
         try (Socket socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
             var in = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
-            var out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8))) {
-            
-            out.write("AnUknownCommand 1 2" + "\n");
-            out.flush();
-            System.out.println("Echo: " + in.readLine());
+            var out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8));
+            BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in))) {
 
-            out.write("UncorrectNbArgs 1 2 3" + "\n");
-            out.flush();
-            System.out.println("Echo: " + in.readLine());
+            Boolean connected = true;            
 
-            out.write("UncorrectTypeArg 1 a" + "\n");
-            out.flush();
-            System.out.println("Echo: " + in.readLine());
+            // receive supported commands list
+            String availableCommands;
+            availableCommands = in.readLine();
+            System.out.println(availableCommands);
 
-            out.write("UncorrectTypeArg b 3" + "\n");
-            out.flush();
-            System.out.println("Echo: " + in.readLine());
-
-            out.write("ADD 1 2" + "\n");
-            out.flush();
-            System.out.println("Echo: " + in.readLine());
-
-            out.write("SUB 1 3" + "\n");
-            out.flush();
-            System.out.println("Echo: " + in.readLine());
-
-            out.write("SUB 4 2" + "\n");
-            out.flush();
-            System.out.println("Echo: " + in.readLine());
-
-            out.write("MULT 4 5" + "\n");
-            out.flush();
-            System.out.println("Echo: " + in.readLine());
-
-            out.write("DIV 6 3" + "\n");
-            out.flush();
-            System.out.println("Echo: " + in.readLine());
-
-            out.write("DIV 8 0" + "\n");
-            out.flush();
-            System.out.println("Echo: " + in.readLine());
-
-            out.write("MOD 5 2" + "\n");
-            out.flush();
-            System.out.println("Echo: " + in.readLine());
-
-
-            for (int i = 0; i < 3; i++) {
-                // There are two errors here!
-                out.write("FIN " + i + "\n");
+            // read input
+            String[] serverResponse;
+            String userInputLine;
+            while ((userInputLine = userInput.readLine()) != null && connected) {
+                // sends command to server
+                out.write(userInputLine + END_LINE);
                 out.flush();
-                System.out.println("Echo: " + in.readLine());
-                
+                // read result
+                serverResponse = in.readLine().split(SEPARATOR);
+                if (serverResponse.length == 0) { 
+                    System.out.println("Corrupted response from server");
+                    break;
+                }
+
+                try {
+                    switch (serverResponse[0]) {
+                        case "OPERATION_SOLVED" : System.out.println("= " + serverResponse[1]);
+                            break;
+                        case "ERROR_DIV_ZERO" : System.out.println("ERROR_DIV_ZERO : division by 0 occured when dividing " + serverResponse[1] + " by " + serverResponse[2]);
+                            break;
+                        case "WRONG_TYPE_ARG" : System.out.println("WRONG_TYPE_ARG : Argument <" + serverResponse[1] + "> has not the right type.");
+                            break;
+                        case "WRONG_NB_ARGS" : System.out.println("WRONG_NB_ARGS : " + serverResponse[1] + " arguments expected, " + serverResponse[2] + "arguments received.");
+                            break;
+                        case "UNKOWN_COMMAND" : System.out.println("UNKOWN_COMMAND : Unkown command <" + serverResponse[2] + ">.\nAvailable commands are : " + serverResponse[1]);
+                            break;
+                        case "CONNECTION_INTERRUPTED" : System.out.println("The connexion has been interrupted.");
+                            connected = false;
+                            break;
+                        default :
+                            System.out.println("Unkown response from server (" + serverResponse[0] + "). Try again.");
+                    }
+                } catch (IndexOutOfBoundsException e) {
+                    System.out.println(serverResponse[0] + " response from the server doesn't have the correct number of argument.");
+                }
             }
+
         } catch (IOException e) {
             System.out.println("Client: exception while using client socket: " + e);
         }
