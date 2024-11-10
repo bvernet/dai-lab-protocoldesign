@@ -12,6 +12,10 @@ The client breaks down complex operation (with more than 2 values) into simple o
 
 ## Section 3 : Messages
 
+- AVAILABLE_COMMANDS
+
+The server sends to the client the available commands.
+
 - ADD <value1, value2>
 
 The client requests the solution of `value1 + value2`.
@@ -52,7 +56,7 @@ The server sends back an error message if the client sends the wrong number of a
 
 - CONNECTION_INTERRUPTED
 
-The server sends a message to inform it has closed the connection due to inactivity.
+The server sends a message to inform it has closed the connection.
 
 
 The server sends back an error message if the client sends an unknown command. 
