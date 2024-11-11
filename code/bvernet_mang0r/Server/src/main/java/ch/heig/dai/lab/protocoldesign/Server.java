@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.*;
+import java.util.function.DoubleToLongFunction;
+
 import static java.nio.charset.StandardCharsets.*;
 
 
@@ -50,9 +52,9 @@ public class Server {
                 server.run();
             }
         
-            private String handleMessage(String message, int arg1, int arg2){
+            private String handleMessage(String message, Double arg1, Double arg2){
         
-                int result;
+                Double result;
         
                 switch(message){
                     case "ADD":
@@ -87,7 +89,9 @@ public class Server {
                     var in = new BufferedReader(new InputStreamReader(socket.getInputStream(), UTF_8));
                     var out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), UTF_8))) {
                     
+                    System.out.println("Connection opened");
                     out.write(Message.AVAILABLE_COMMANDS.toString() + SEPARATOR + Message.availableCommands() + END_LINE);
+                    out.flush();
 
                     String line;
                     while ((line = in.readLine()) != null) {
@@ -104,12 +108,12 @@ public class Server {
                         }
 
                         String message = args[0];
-                        int values[] = new int[NB_ARGS];
+                        Double values[] = new Double[NB_ARGS];
                         boolean isFormatValid = true;
 
                         for(int i = 1; i < args.length; i++){
                             try {
-                                values[i-1] = Integer.parseInt(args[i]);
+                                values[i-1] = Double.parseDouble(args[i]);
                             } catch (NumberFormatException e) {
                                 out.write(Message.WRONG_TYPE_ARG.toString() + SEPARATOR + args[i] + END_LINE);
                                 System.out.println(Message.WRONG_TYPE_ARG.toString() + SEPARATOR + args[i] + END_LINE); // DEBUG

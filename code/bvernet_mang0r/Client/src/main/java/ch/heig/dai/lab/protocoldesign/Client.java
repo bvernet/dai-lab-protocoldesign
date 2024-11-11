@@ -9,7 +9,7 @@ import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 
 public class Client {
-    final String SERVER_ADDRESS = "172.21.200.183";
+    final String SERVER_ADDRESS = "10.194.36.247";
     final int SERVER_PORT = 55555;
     final String END_LINE = "\n";
     final String SEPARATOR = " ";
@@ -55,9 +55,9 @@ public class Client {
                             break;
                         case "WRONG_TYPE_ARG" : System.out.println("WRONG_TYPE_ARG : Argument <" + serverResponse[1] + "> has not the right type.");
                             break;
-                        case "WRONG_NB_ARGS" : System.out.println("WRONG_NB_ARGS : " + serverResponse[1] + " arguments expected, " + serverResponse[2] + "arguments received.");
+                        case "WRONG_NB_ARGS" : System.out.println("WRONG_NB_ARGS : " + serverResponse[1] + " arguments expected, " + serverResponse[2] + " arguments received.");
                             break;
-                        case "UNKOWN_COMMAND" : System.out.println("UNKOWN_COMMAND : Unkown command <" + serverResponse[2] + ">.\nAvailable commands are : " + serverResponse[1]);
+                        case "UNKOWN_COMMAND" : System.out.println("UNKOWN_COMMAND : Unkown command <" + serverResponse[2] + ">.\nAvailable commands are : " + String.join(SEPARATOR, serverResponse));
                             break;
                         case "CONNECTION_INTERRUPTED" : System.out.println("The connexion has been interrupted.");
                             connected = false;
