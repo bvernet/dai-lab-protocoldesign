@@ -6,13 +6,11 @@ Simple calculator protocol (SCP) is a client-server protocol. The client connect
 
 ## Section 2 : Transport layer protocol
 SCP uses TCP. The client established the connection. It has to know the IP address of the server. The server listens on TCP port 55555. 
-The server is in charge of closing the connection.
-
-The client breaks down complex operation (with more than 2 values) into simple operations (only 2 values involved). The client opens a connection for each complex operation and closes it when it gets the final result. After a certain amount of time of inactivity, the server closes the connection.
+The client is in charge of closing the connection.
 
 ## Section 3 : Messages
 
-- AVAILABLE_COMMANDS
+- AVAILABLE_COMMANDS \<availableCommands>
 
 The server sends to the client the available commands.
 
@@ -50,7 +48,7 @@ The server sends back an error message for the first non integer argument sent b
 
 - WRONG_NB_ARGS <nbValuesExpected, nbValuesReceived>
 
-The server sends back an error message if the client sends the wrong number of arguments (2 arguments expected).
+The server sends back an error message if the client sends the wrong number of arguments (3 arguments expected: the command and the 2 values).
 
 - UNKOWN_COMMAND <commandsAvailable, commandReceived>
 
@@ -68,26 +66,25 @@ All messages are UTF-8 encoded with `\n` as end-of-line character.
 #### Successful operation solving
 
 1. Client : Open TCP connection
-2. Client : ADD 1 2
-3. Server : OPERATION_SOLVED 3
-4. Client : MULT 3 2 
-5. Server : OPERATION_SOLVED 6
-6. Client : Closes TCP connection
+2. Server : AVAILABLE COMMANDS [ADD <v1,v2>, SUB <v1,v2>, MULT <v1,v2>, DIV <v1,v2>, MOD <v1,v2>]
+3. Client : ADD 1 2
+4. Server : OPERATION_SOLVED 3
+5. Client : MULT 3 2 
+6. Server : OPERATION_SOLVED 6
+7. Client : Closes TCP connection
 
 #### Wrong type arguments
 
 1. Client : Open TCP connection
-2. Client : ADD 1 a
-3. Server : WRONG_TYPE_ARG a
-4. Client : Closes TCP connection
+2. Server : AVAILABLE COMMANDS [ADD <v1,v2>, SUB <v1,v2>, MULT <v1,v2>, DIV <v1,v2>, MOD <v1,v2>]
+3. Client : ADD 1 a
+4. Server : WRONG_TYPE_ARG a
+5. Client : Closes TCP connection
 
-#### Inactivity 
+#### Wrong number of arguments
 
 1. Client : Open TCP connection
-2. Client : ADD 1 4
-3. Server : OPERATION_SOLVED 5
-
-(...)
-
-4. Server : CONNECTION_INTERRUPTED
-5. Server : Closes TCP connection
+2. Server : AVAILABLE COMMANDS [ADD <v1,v2>, SUB <v1,v2>, MULT <v1,v2>, DIV <v1,v2>, MOD <v1,v2>]
+3. Client : ADD 1 2 3
+4. Server : WRONG_NB_ARGS 3 4
+5. Client : Closes TCP connection
