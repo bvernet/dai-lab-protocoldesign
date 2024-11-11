@@ -52,12 +52,12 @@ The server sends back an error message if the client sends the wrong number of a
 
 - UNKOWN_COMMAND <commandsAvailable, commandReceived>
 
+The server sends back an error message if the client sends an unkown command.
+
 - CONNECTION_INTERRUPTED
 
 The server sends a message to inform it has closed the connection.
 
-
-The server sends back an error message if the client sends an unknown command. 
 
 All messages are UTF-8 encoded with `\n` as end-of-line character. 
 
