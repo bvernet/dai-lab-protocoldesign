@@ -27,7 +27,7 @@ public class Server {
         ERROR_DIV_ZERO,
         WRONG_TYPE_ARG,
         WRONG_NB_ARGS,
-        UNKOWN_COMMAND,
+        UNKNOWN_COMMAND,
         CONNECTION_INTERRUPTED;
 
 
@@ -66,7 +66,7 @@ public class Server {
                         result = arg1 % arg2;
                         break;
                     default:
-                        return Message.UNKOWN_COMMAND.toString() +SEPARATOR + Message.availableCommands() + SEPARATOR + message;          
+                        return Message.UNKNOWN_COMMAND.toString() +SEPARATOR + Message.availableCommands() + SEPARATOR + message;          
         }
         return Message.OPERATION_SOLVED.toString() + SEPARATOR + result;
     }

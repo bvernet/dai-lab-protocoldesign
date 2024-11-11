@@ -50,9 +50,9 @@ The server sends back an error message for the first non integer argument sent b
 
 The server sends back an error message if the client sends the wrong number of arguments (3 arguments expected: the command and the 2 values).
 
-- UNKOWN_COMMAND <commandsAvailable, commandReceived>
+- UNKNOWN_COMMAND <commandsAvailable, commandReceived>
 
-The server sends back an error message if the client sends an unkown command.
+The server sends back an error message if the client sends an unknown command.
 
 - CONNECTION_INTERRUPTED
 
