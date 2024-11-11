@@ -9,7 +9,7 @@ import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 
 public class Client {
-    final String SERVER_ADDRESS = "10.194.36.247";
+    final String SERVER_ADDRESS = "172.20.10.3";
     final int SERVER_PORT = 55555;
     final String END_LINE = "\n";
     final String SEPARATOR = " ";

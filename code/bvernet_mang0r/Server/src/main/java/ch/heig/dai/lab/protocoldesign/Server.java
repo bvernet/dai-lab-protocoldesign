@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.*;
-import java.util.function.DoubleToLongFunction;
 
 import static java.nio.charset.StandardCharsets.*;
 
@@ -18,28 +17,19 @@ public class Server {
     final int NB_ARGS = 2;
 
     private static enum Message {
-        AVAILABLE_COMMANDS(0),
-        ADD(2),
-        SUB(2),
-        MULT(2),
-        DIV(2),
-        MOD(2),
-        OPERATION_SOLVED(1),
-        ERROR_DIV_ZERO(2),
-        WRONG_TYPE_ARG(1),
-        WRONG_NB_ARGS(2),
-        UNKOWN_COMMAND(2),
-        CONNECTION_INTERRUPTED(0);
+        AVAILABLE_COMMANDS,
+        ADD,
+        SUB,
+        MULT,
+        DIV,
+        MOD,
+        OPERATION_SOLVED,
+        ERROR_DIV_ZERO,
+        WRONG_TYPE_ARG,
+        WRONG_NB_ARGS,
+        UNKOWN_COMMAND,
+        CONNECTION_INTERRUPTED;
 
-        private final int nbArguments;
-
-        private Message(int nbArguments) {
-            this.nbArguments = nbArguments;
-        }
-
-        public int nbArguments() { 
-            return nbArguments; 
-        } 
 
         public static String availableCommands(){
                     return "[ADD <v1,v2>, SUB <v1,v2>, MULT <v1,v2>, DIV <v1,v2>, MOD <v1,v2>]";
@@ -89,7 +79,6 @@ public class Server {
                     var in = new BufferedReader(new InputStreamReader(socket.getInputStream(), UTF_8));
                     var out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), UTF_8))) {
                     
-                    System.out.println("Connection opened");
                     out.write(Message.AVAILABLE_COMMANDS.toString() + SEPARATOR + Message.availableCommands() + END_LINE);
                     out.flush();
 
@@ -98,11 +87,8 @@ public class Server {
 
                         String[] args = line.split(SEPARATOR);
 
-                        System.out.println("Line received : " + line + " args.length = " + args.length); // DEBUG
-
                         if(args.length != 3){
                             out.write(Message.WRONG_NB_ARGS.toString() + SEPARATOR + NB_ARGS + SEPARATOR + args.length + END_LINE);
-                            System.out.println(Message.WRONG_NB_ARGS.toString() + SEPARATOR + NB_ARGS + SEPARATOR + args.length + END_LINE); // DEBUG
                             out.flush();
                             continue;
                         }
@@ -116,7 +102,6 @@ public class Server {
                                 values[i-1] = Double.parseDouble(args[i]);
                             } catch (NumberFormatException e) {
                                 out.write(Message.WRONG_TYPE_ARG.toString() + SEPARATOR + args[i] + END_LINE);
-                                System.out.println(Message.WRONG_TYPE_ARG.toString() + SEPARATOR + args[i] + END_LINE); // DEBUG
                                 out.flush();
                                 isFormatValid = false;
                                 break;
@@ -131,14 +116,10 @@ public class Server {
                         
                         out.write(output + END_LINE);
                         out.flush();
-                        System.out.println(output + END_LINE); // DEBUG
-
                     }
 
                     out.write(Message.CONNECTION_INTERRUPTED.toString() + END_LINE);
-                    out.flush();
-                    System.out.println(Message.CONNECTION_INTERRUPTED.toString() + END_LINE); // DEBUG
-                
+                    out.flush();                
                 } catch (IOException e) {
                     System.out.println("Server: socket ex.: " + e);
                 }
