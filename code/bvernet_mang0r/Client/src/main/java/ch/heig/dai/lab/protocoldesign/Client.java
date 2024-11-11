@@ -13,6 +13,7 @@ public class Client {
     final int SERVER_PORT = 55555;
     final String END_LINE = "\n";
     final String SEPARATOR = " ";
+    final String EXIT = "exit";
 
     public static void main(String[] args) {
         // Create a new client and run it
@@ -32,11 +33,16 @@ public class Client {
             String availableCommands;
             availableCommands = in.readLine();
             System.out.println(availableCommands);
+            System.out.println("Enter '" + EXIT + "' to quit.");
 
             // read input
             String[] serverResponse;
             String userInputLine;
             while ((userInputLine = userInput.readLine()) != null && connected) {
+                if (userInputLine.equals("exit")) {
+                    System.out.println("Exiting...");
+                    break;
+                }
                 // sends command to server
                 out.write(userInputLine + END_LINE);
                 out.flush();
