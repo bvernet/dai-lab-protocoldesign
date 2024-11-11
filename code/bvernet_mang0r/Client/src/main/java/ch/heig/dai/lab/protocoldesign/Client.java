@@ -64,9 +64,9 @@ public class Client {
                         case "WRONG_NB_ARGS" : System.out.println("WRONG_NB_ARGS : " + serverResponse[1] + " arguments expected, " + serverResponse[2] + " arguments received.");
                             break;
                         case "UNKNOWN_COMMAND" :
-                            String unkwownCommand = serverResponse[serverResponse.length-1];
-                            serverResponse[serverResponse.length-1] = "";
-                            System.out.println("UNKNOWN_COMMAND : Unknown command '" + unkwownCommand + "'.\nAvailable commands are : " + String.join(SEPARATOR, serverResponse));
+                            String[] availableCommandsInResponse = new String[serverResponse.length - 2];
+                            System.arraycopy(serverResponse, 1, availableCommandsInResponse, 0, availableCommandsInResponse.length);
+                            System.out.println("UNKNOWN_COMMAND : Unknown command '" + serverResponse[serverResponse.length-1] + "'.\nAvailable commands are : " + String.join(SEPARATOR, availableCommandsInResponse));
                             break;
                         case "CONNECTION_INTERRUPTED" : System.out.println("The connexion has been interrupted.");
                             connected = false;
