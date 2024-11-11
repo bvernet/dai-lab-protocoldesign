@@ -88,7 +88,7 @@ public class Server {
                         String[] args = line.split(SEPARATOR);
 
                         if(args.length != 3){
-                            out.write(Message.WRONG_NB_ARGS.toString() + SEPARATOR + NB_ARGS + SEPARATOR + args.length + END_LINE);
+                            out.write(Message.WRONG_NB_ARGS.toString() + SEPARATOR + (NB_ARGS+1) + SEPARATOR + args.length + END_LINE);
                             out.flush();
                             continue;
                         }
